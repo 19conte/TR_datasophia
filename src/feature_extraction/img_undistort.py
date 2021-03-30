@@ -81,7 +81,7 @@ def find_undistort_maps(cam_path):
     map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
     
     num_cam = cam_path.split("\\")[-2]
-    save_path = "MapsSquare/" + num_cam
+    save_path = "../../processed_data/MapsSquare/" + num_cam
 
     np.save(save_path + "map1.npy", map1)
     np.save(save_path + "map2.npy", map2)
@@ -98,8 +98,8 @@ def undistort(img_path):
         numpy array: "undistorted image"
     """
     cam_num = img_path.split("/")[-2]
-    map1 = np.load("../Solais_Data/MapsSquare/" + cam_num + "map1.npy")
-    map2 = np.load("../Solais_Data/MapsSquare/" + cam_num + "map2.npy")
+    map1 = np.load("../../Solais_Data/MapsSquare/" + cam_num + "map1.npy")
+    map2 = np.load("../../Solais_Data/MapsSquare/" + cam_num + "map2.npy")
 
     img = cv2.imread(img_path)
     square_img = prepro(img, 480, outside_val=0.)

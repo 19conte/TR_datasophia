@@ -1,0 +1,4 @@
+Model,RMSE,MAPE,R2
+Baseline,0.23,35%,x
+GAM,0.30,60%,0.68
+Ridge,0.14,25%,0.60

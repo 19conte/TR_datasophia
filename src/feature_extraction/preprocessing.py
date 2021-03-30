@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from cv2 import cv2
-from img_undistort import undistort
+from mask_and_zones import create_circular_mask
 
 
 """preprocess RGB images : circular mask, square images"""
@@ -76,6 +76,7 @@ def path_to_canals(image_path, with_undistortion = False, outside_val=np.nan, mi
         list: the original image and the two images created
     """
     if with_undistortion:
+        from img_undistort import undistort
         image = undistort(image_path)
     else:
         img = np.array(Image.open(image_path))/255

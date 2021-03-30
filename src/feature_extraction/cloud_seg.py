@@ -7,9 +7,7 @@ from skimage.filters import gaussian
 from skimage.measure import perimeter
 import mahotas
 
-from preprocessing import path_to_canals
 from mask_and_zones import create_circular_mask, circumsolar_crops
-from feature_extractor import low_high_filter, sun_isoperimetric_ratio
 
 
 def sun_segmentation(img_to_modif, based_on_img, sun_val):
@@ -23,6 +21,27 @@ def sun_segmentation(img_to_modif, based_on_img, sun_val):
     sun_thres = np.nanpercentile(based_on_img, 98)
     img_to_modif[based_on_img > sun_thres] = sun_val
 
+def high_filter(image, param=1.6):
+    """Computes the high-pass filtered version of an image
+
+    Args:
+        image (numpy array): grayscale image
+        param (float, optional): filter intensity parameter. Defaults to 1.6.
+
+    Returns:
+        numpy array: high filtered image
+    """
+    nan_pos = np.isnan(image)
+    img = image.copy()
+    mean = np.nanmean(img)
+    img[nan_pos] = mean
+
+    low_filtered_image = gaussian(img, sigma = 4)
+    gau = gaussian(img, sigma = 4/param)
+    high_filtered_image = gau - low_filtered_image
+
+    high_filtered_image[nan_pos] = np.nan
+    return high_filtered_image
 
 def target(hist, bins, t):
     """Computes the cross-entropy between two parts of an histogram
@@ -88,6 +107,8 @@ def cloud_segmentation(gray_image, rb):
     Returns:
         : [description]
     """
+    from feature_extractor import sun_isoperimetric_ratio
+    
     r_b_img = rb.copy()
     r_b_img -= np.nanmin(r_b_img)
     #initialize markers
@@ -102,7 +123,7 @@ def cloud_segmentation(gray_image, rb):
 
     #high pass filter, for the filtering to make sense, sun pixels are set to the mean
     r_b_img[sun_mask == 3] = mean
-    _, filtered_image = low_high_filter(r_b_img)
+    filtered_image = high_filter(r_b_img)
     fil_std = np.nanstd(filtered_image)
 
     # Put the sun pixels back to NaNs

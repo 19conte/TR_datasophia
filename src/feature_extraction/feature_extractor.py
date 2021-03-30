@@ -172,7 +172,7 @@ def low_high_filter(image, param=1.6):
         param (float, optional): filter intensity parameter. Defaults to 1.6.
 
     Returns:
-        [type]: [description]
+        tuple of arrays: low- and high-filtered images
     """
     nan_pos = np.isnan(image)
     img = image.copy()
