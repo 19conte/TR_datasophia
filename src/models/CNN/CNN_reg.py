@@ -366,7 +366,7 @@ def run(small_sample=False):
     """
 
     root = "../../../Solais_Data/mobotix1_prepro_240/"
-    df_tmp = pd.read_csv("../../../Solais_Data/GHI_target.csv")
+    df_tmp = pd.read_csv("../../../processed_data/CNN_target.csv")
     df = build_dataframe(root, df_tmp)
 
     if small_sample == True:
